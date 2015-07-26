@@ -1,0 +1,69 @@
+---
+title: "Tooth Growth Data (Statistical Inference Course Project Part 2)"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+---
+by José Carrasquero
+
+##1. Load the ToothGrowth data and perform some basic exploratory data analyses 
+The following packages are used for this analysis:
+
+```{r, warning=FALSE, message=FALSE}
+library(graphics)
+library(datasets)
+```
+
+```{r, warning=FALSE, cache = TRUE}
+require(graphics)
+coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth,
+       xlab = "ToothGrowth data: length vs dose, given type of supplement")
+##Box len ~ supp
+boxplot(len ~ supp, ToothGrowth)
+
+##Box len ~ dose
+boxplot(len ~ dose, ToothGrowth)
+```
+
+
+##2. Provide a basic summary of the data.
+```{r, warning=FALSE, cache = TRUE}
+print(ToothGrowth)
+
+summary(ToothGrowth)
+
+#Different doses
+unique(ToothGrowth$dose)
+```
+
+##3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+
+```{r, warning=FALSE, cache = TRUE}
+t.test(len ~ supp, ToothGrowth, paired = FALSE, var.equal = FALSE, conf.level = 0.95)
+
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == 0.5, ], paired = FALSE, var.equal = FALSE, conf.level = 0.95)
+
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == 1, ],paired = FALSE, var.equal = FALSE, conf.level = 0.95)
+
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == 2, ],paired = FALSE, var.equal = FALSE, conf.level = 0.95)
+
+t.test(len ~ dose, ToothGrowth[ToothGrowth$dose != 2, ], paired = FALSE, var.equal = FALSE, conf.level = 0.95)
+
+t.test(len ~ dose, ToothGrowth[ToothGrowth$dose != 1, ], paired = FALSE, var.equal = FALSE, conf.level = 0.95)
+
+t.test(len ~ dose, ToothGrowth[ToothGrowth$dose != 0.5, ], paired = FALSE, var.equal = FALSE, conf.level = 0.95)
+
+```
+
+##4. State your conclusions and the assumptions needed for your conclusions. 
+
+Assumptions:
+
+1. The Data is not Paired. It is a Two Sample T Test.
+
+2. From the box plots we can assume the variences are not equal.
+
+Conclusion:
+1. Suplement type has no effect on tooth growth. (this is seen in the first 3 T test)
+2. The dose level does have an effect on tooth growth. (this can be seen in the last 3 t test)

@@ -1,0 +1,127 @@
+---
+title: "Central Limit Theorem (Statistical Inference Course Project Part 1)"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+---
+by José Carrasquero
+
+##Overview
+In a few (2-3) sentences explain what is going to be reported on.
+
+The following packages are used for this analysis:
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+```
+
+##Simulations 
+Include English explanations of the simulations you ran, with the accompanying R code. Your explanations should make clear what the R code accomplishes.
+
+For different simulations where used:
+
+####1. Distribution of 1000 random uniforms: 
+Following R code is used to obtain 1000 numbers from a uniform distribution. Then it is transform from numeric to data frame in order to use ggplot to generate relevant graph. The graph generated with this code can be seen in Figure 1 of the appendix.
+
+```{r, warning=FALSE, cache = TRUE}
+set.seed(1)
+x = NULL
+x <- runif(1000)
+dat <- as.data.frame(x)
+dat$size<-1
+```
+
+####2. Distribution of 1000 averages of 40 random uniforms: 
+Following R code is used to obtain 1000 averages from a 40 random uniform distributions. Then it is transform from numeric to data frame in order to use ggplot to generate relevant graph. The graph generated with this code can be seen in Figure 1 of the appendix.
+
+```{r, warning=FALSE, cache = TRUE}
+set.seed(2)
+x = NULL
+for (i in 1 : 1000) x = c(x, mean(runif(40)))
+dat <- as.data.frame(x)
+dat$size<-40
+```
+
+####3. Distribution of 1000 random exponencials: 
+Following R code is used to obtain 1000 numbers from a exponential distribution with a lambda rate parameter equal to 0.2. Then it is transform from numeric to data frame in order to use ggplot to generate relevant graph. The graph generated with this code can be seen in Figure 1 of the appendix.
+
+```{r, warning=FALSE, cache = TRUE}
+set.seed(3)
+lambda = 0.2 
+x = NULL
+x <- rexp(1000,lambda)
+dat <- as.data.frame(x)
+dat$size<-1
+```
+
+####4. Distribution of 1000 averages of 40 random exponencials: 
+Following R code is used to obtain 1000 averages from a 40 random exponencial distributions with a lambda rate parameter equal to 0.2. Then it is transform from numeric to data frame in order to use ggplot to generate relevant graph. The graph generated with this code can be seen in Figure 1 of the appendix.
+
+```{r, warning=FALSE, cache = TRUE}
+set.seed(4)
+lambda = 0.2 
+x = NULL
+for (i in 1 : 1000) x = c(x, mean(rexp(40,lambda)))
+dat <- as.data.frame(x)
+dat$size<-40
+```
+
+##Sample Mean versus Theoretical Mean
+Include figures with titles. In the figures, highlight the means you are comparing. Include text that explains the figures and what is shown on them, and provides appropriate numbers.
+
+##Sample Variance versus Theoretical Variance
+Include figures (output from R) with titles. Highlight the variances you are comparing. Include text that explains your understanding of the differences of the variances.
+
+##Distribution: 
+Via figures and text, explain how one can tell the distribution is approximately normal.
+
+##Appendix 1:
+
+This appendix section contains all the figures that are referenced through the document and the complete code that was used to generate them in each case.
+
+```{r, warning=FALSE, cache = TRUE}
+# Distribution of 1000 random uniforms
+set.seed(1)
+x = NULL
+x <- runif(1000)
+dat <- as.data.frame(x)
+dat$size<-1
+g <- ggplot(dat, aes(x = x, fill = size)) + geom_histogram(binwidth=.05, colour = "black", aes(y = ..density..)) 
+g <- g + ggtitle("Figure 1: Distribution of 1000 random uniforms")
+g + facet_grid(. ~ size)
+
+# Distribution of 1000 averages of 40 random uniforms
+set.seed(2)
+x = NULL
+for (i in 1 : 1000) x = c(x, mean(runif(40)))
+dat <- as.data.frame(x)
+dat$size<-40
+g <- ggplot(dat, aes(x = x, fill = size)) + geom_histogram(binwidth=sd(dat$x)/10, colour = "black", aes(y = ..density..)) 
+g <- g + stat_function(fun = dnorm, arg = list(mean = mean(dat$x), sd = sd(dat$x)), size=2, col="red")
+g <- g + ggtitle("Figure 2: Distribution of 1000 averages of 40 random uniforms")
+g + facet_grid(. ~ size)
+
+# Distribution of 1000 random exponencials"
+set.seed(3)
+lambda = 0.2 
+x = NULL
+x <- rexp(1000,lambda)
+dat <- as.data.frame(x)
+dat$size<-1
+g <- ggplot(dat, aes(x = x, fill = size)) + geom_histogram(binwidth=.3, colour = "black", aes(y = ..density..)) 
+g <- g + ggtitle("Figure 3: Distribution of 1000 random exponencials")
+g + facet_grid(. ~ size)
+
+# Distribution of 1000 averages of 40 random exponencials
+set.seed(4)
+lambda = 0.2 
+x = NULL
+for (i in 1 : 1000) x = c(x, mean(rexp(40,lambda)))
+dat <- as.data.frame(x)
+dat$size<-40
+g <- ggplot(dat, aes(x = x, fill = size)) + geom_histogram(binwidth=sd(dat$x)/10, colour = "black", aes(y = ..density..)) 
+g <- g + stat_function(fun = dnorm, arg = list(mean = mean(dat$x), sd = sd(dat$x)), size=2, col="blue") 
+g <- g + ggtitle("Figure 4: Distribution of 1000 averages of 40 random exponencials")
+g + facet_grid(. ~ size)
+```
